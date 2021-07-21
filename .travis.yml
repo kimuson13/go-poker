@@ -1,0 +1,9 @@
+language: go
+
+go:
+  - 1.16
+
+before_script: go get -u github.com/kisielk/errcheck
+
+script:
+  - go test -v ./... && errorcheck ./...
