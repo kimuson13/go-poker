@@ -1,7 +1,7 @@
 package card
 
 var Cards map[string]bool = map[string]bool{
-	"Heart 1":       false,
+	"Heart A":       false,
 	"Heart 2":       false,
 	"Heart 3":       false,
 	"Heart 4":       false,
@@ -14,7 +14,7 @@ var Cards map[string]bool = map[string]bool{
 	"Heart Jack":    false,
 	"Heart Queen":   false,
 	"Heart King":    false,
-	"Diamond 1":     false,
+	"Diamond A":     false,
 	"Diamond 2":     false,
 	"Diamond 3":     false,
 	"Diamond 4":     false,
@@ -27,7 +27,7 @@ var Cards map[string]bool = map[string]bool{
 	"Diamond Jack":  false,
 	"Diamond Queen": false,
 	"Diamond King":  false,
-	"Club 1":        false,
+	"Club A":        false,
 	"Club 2":        false,
 	"Club 3":        false,
 	"Club 4":        false,
@@ -40,7 +40,7 @@ var Cards map[string]bool = map[string]bool{
 	"Club Jack":     false,
 	"Club Queen":    false,
 	"Club King":     false,
-	"Spade 1":       false,
+	"Spade A":       false,
 	"Spade 2":       false,
 	"Spade 3":       false,
 	"Spade 4":       false,
