@@ -49,6 +49,12 @@ func RepickCards(hands []string, changeQueryInts []int) []string {
 	return hands
 }
 
+func ResetCards() {
+	for _, key := range cardKeys {
+		cards[key] = false
+	}
+}
+
 var cards map[string]bool = map[string]bool{
 	"Heart A":       false,
 	"Heart 2":       false,
