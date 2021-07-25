@@ -1,6 +1,61 @@
 package card
 
-var Cards map[string]bool = map[string]bool{
+import (
+	"math/rand"
+)
+
+func PickFirstCards() []string {
+	// 今はここでrandの初期化を行っているが、最終的にはmain packageで行うようにする。
+	// テストのsetupでrandの初期化をしているのでここは不必要
+	// rand.Seed(time.Now().UnixNano())
+
+	hands := make([]string, 5)
+
+	for i := 0; i < 5; {
+		key := cardKeys[rand.Intn(52)]
+		if cards[key] == false {
+			hands[i] = key
+			cards[key] = true
+			i++
+			continue
+		}
+	}
+
+	return hands
+}
+
+func RepickCards(hands []string, changeQueryInts []int) []string {
+	// 今はここでrandの初期化を行っているが、最終的にはmain packageで行うようにする。
+	// テストのsetupでrandの初期化をしているのでここは不必要
+	// rand.Seed(time.Now().UnixNano())
+	for _, hand := range hands {
+		cards[hand] = true
+	}
+	if len(changeQueryInts) == 0 {
+		return hands
+	}
+
+	for i := 0; i < len(changeQueryInts); {
+		key := cardKeys[rand.Intn(52)]
+		if cards[key] == false {
+			hands[changeQueryInts[i]] = key
+			cards[key] = true
+			i++
+
+			continue
+		}
+	}
+
+	return hands
+}
+
+func ResetCards() {
+	for _, key := range cardKeys {
+		cards[key] = false
+	}
+}
+
+var cards map[string]bool = map[string]bool{
 	"Heart A":       false,
 	"Heart 2":       false,
 	"Heart 3":       false,
@@ -55,7 +110,7 @@ var Cards map[string]bool = map[string]bool{
 	"Spade King":    false,
 }
 
-var CardKeys []string = []string{
+var cardKeys []string = []string{
 	"Heart 1",
 	"Heart 2",
 	"Heart 3",
