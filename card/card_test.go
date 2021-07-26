@@ -145,17 +145,5 @@ func TestRepickCards(t *testing.T) {
 				t.Errorf("RepickCards want len(%d) map, but got len(%d) map", c.want, len(c.handmap))
 			}
 		})
-		// repickHands := card.RepickCards(c.hands, c.input)
-		// for _, rHand := range repickHands {
-		// 	if _, ok := c.handmap[rHand]; ok {
-		// 		c.handmap[rHand]++
-		// 	} else {
-		// 		c.handmap[rHand] = 1
-		// 	}
-		// }
-
-		// if len(c.handmap) != c.want {
-		// 	t.Errorf("Error in %s: the length this test wants is %d, but got %d\nmap is %v", name, c.want, len(c.handmap), c.handmap)
-		// }
 	}
 }
