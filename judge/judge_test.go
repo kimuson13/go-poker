@@ -38,10 +38,13 @@ func TestIsRoyalStraightFlush(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsRoyalStraightFlush(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsRoyalStraightFlush(c.hands); c.want != got {
+				t.Errorf("want IsRoyalStraightFlush = %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
 
@@ -189,10 +192,13 @@ func TestIsStraightFlush(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsStraightFlush(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsStraightFlush(c.hands); c.want != got {
+				t.Errorf("want IsStraightFlush = %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
 
@@ -260,10 +266,13 @@ func TestIsFourCard(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsFourCard(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsFourCard(c.hands); c.want != got {
+				t.Errorf("want IsFourCard = %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
 
@@ -295,10 +304,13 @@ func TestIsFullHouse(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsFullHouse(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsFullHouse(c.hands); c.want != got {
+				t.Errorf("want IsFullHouse = %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
 
@@ -330,10 +342,13 @@ func TestIsFlush(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsFlush(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsFlush(c.hands); c.want != got {
+				t.Errorf("want IsFlush = %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
 
@@ -385,10 +400,13 @@ func TestIsStraight(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsStraight(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsStraight(c.hands); c.want != got {
+				t.Errorf("want IsStraight = %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
 
@@ -456,10 +474,13 @@ func TestIsThreeCard(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsThreeCard(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsThreeCard(c.hands); c.want != got {
+				t.Errorf("want IsThreeCard = %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
 
@@ -491,10 +512,13 @@ func TestIsTwoPair(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsTwoPair(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsTwoPair(c.hands); c.want != got {
+				t.Errorf("want IsTwoPair = %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
 
@@ -526,9 +550,12 @@ func TestIsOnePair(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		got := judge.IsOnePair(c.hands)
-		if c.want != got {
-			t.Errorf("Test failed with %s: this test want %v, but got %v", name, c.want, got)
-		}
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if got := judge.IsOnePair(c.hands); c.want != got {
+				t.Errorf("want IsOnePair %v, but got %v", c.want, got)
+			}
+		})
 	}
 }
