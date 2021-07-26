@@ -55,7 +55,7 @@ func TestPickFirstCards(t *testing.T) {
 	for name, c := range cases {
 		c := c
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
+			// t.Parallel()
 			hands := card.PickFirstCards()
 			for _, hand := range hands {
 				if _, ok := c.mp[hand]; ok {
@@ -131,7 +131,7 @@ func TestRepickCards(t *testing.T) {
 	for name, c := range cases {
 		c := c
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
+			// t.Parallel()
 			repickHands := card.RepickCards(c.hands, c.input)
 			for _, rHand := range repickHands {
 				if _, ok := c.handmap[rHand]; ok {
