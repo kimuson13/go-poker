@@ -53,18 +53,33 @@ func TestPickFirstCards(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		hands := card.PickFirstCards()
-		for _, hand := range hands {
-			if _, ok := c.mp[hand]; ok {
-				c.mp[hand]++
-			} else {
-				c.mp[hand] = 1
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			hands := card.PickFirstCards()
+			for _, hand := range hands {
+				if _, ok := c.mp[hand]; ok {
+					c.mp[hand]++
+				} else {
+					c.mp[hand] = 1
+				}
 			}
-		}
+			if len(c.mp) != c.want {
+				t.Errorf("PickFirst card want len(%d) map, but got len(%d) map", c.want, len(c.mp))
+			}
+		})
+		// hands := card.PickFirstCards()
+		// for _, hand := range hands {
+		// 	if _, ok := c.mp[hand]; ok {
+		// 		c.mp[hand]++
+		// 	} else {
+		// 		c.mp[hand] = 1
+		// 	}
+		// }
 
-		if len(c.mp) != c.want {
-			t.Errorf("Error in %s: this card is not unique. want length = %d, but bot %d", name, c.want, len(c.mp))
-		}
+		// if len(c.mp) != c.want {
+		// 	t.Errorf("Error in %s: this card is not unique. want length = %d, but bot %d", name, c.want, len(c.mp))
+		// }
 	}
 }
 
@@ -114,17 +129,21 @@ func TestRepickCards(t *testing.T) {
 	}
 
 	for name, c := range cases {
-		repickHands := card.RepickCards(c.hands, c.input)
-		for _, rHand := range repickHands {
-			if _, ok := c.handmap[rHand]; ok {
-				c.handmap[rHand]++
-			} else {
-				c.handmap[rHand] = 1
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			repickHands := card.RepickCards(c.hands, c.input)
+			for _, rHand := range repickHands {
+				if _, ok := c.handmap[rHand]; ok {
+					c.handmap[rHand]++
+				} else {
+					c.handmap[rHand] = 1
+				}
 			}
-		}
 
-		if len(c.handmap) != c.want {
-			t.Errorf("Error in %s: the length this test wants is %d, but got %d\nmap is %v", name, c.want, len(c.handmap), c.handmap)
-		}
+			if len(c.handmap) != c.want {
+				t.Errorf("RepickCards want len(%d) map, but got len(%d) map", c.want, len(c.handmap))
+			}
+		})
 	}
 }
