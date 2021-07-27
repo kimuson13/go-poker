@@ -71,3 +71,5 @@ OK, we'll be loking forward to meeting you again someday.
 Add HIGH SCORE: Name kimuson, Score 25
 ```
 と表示されます。ハイスコアが登録されたことが分かります。
+## これから改善したいところ
+Go製のゲームライブラリである[ebiten](https://github.com/hajimehoshi/ebiten)を用いて、２Dゲームにしたいと考えています。
