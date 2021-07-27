@@ -1,6 +1,8 @@
 # go-poker -コマンドライン上で動くマシンポーカー-
 [![Build Status](https://travis-ci.com/kimuson13/go-poker.svg?branch=main)](https://travis-ci.com/kimuson13/go-poker)  
-##
+## 概要
+Go製のマシンポーカーです。
+基本的なルールは
 
 ## 使い方
 ```
