@@ -9,7 +9,8 @@ Go製のマシンポーカーです。
 ```
 $ git clone https://github.com/kimuson13/go-poker.git
 $ cd cmd/poker
-$ go build main.go [オプション]
+$ go build poker.go 
+$ ./poker [オプション]
 ```
 もしくは、
 ```
