@@ -48,7 +48,7 @@ func Run(name string, db *sql.DB, in io.Reader, rate int) error {
 
 	for {
 		chip -= rate
-		if chip <= 0 {
+		if chip < 0 {
 			if _, err := fmt.Println("You don't have enough chip!"); err != nil {
 				return err
 			}
