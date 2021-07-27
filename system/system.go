@@ -2,11 +2,13 @@ package system
 
 import (
 	"bufio"
+	"database/sql"
 	"fmt"
 	"io"
 	"os"
 
 	"github.com/kimuson13/go-poker/card"
+	database "github.com/kimuson13/go-poker/db"
 	"github.com/kimuson13/go-poker/judge"
 )
 
@@ -34,10 +36,13 @@ const (
 
 var chip int = 20
 
-func Run(name string, rate int) error {
-	userInput := New()
+func Run(name string, db *sql.DB, in io.Reader, rate int) error {
+	flag, currentHighScore, err := ShowHighScore(db)
+	if err != nil {
+		return err
+	}
 
-	if _, err := fmt.Printf("Welcome to go-poker, %s.\nrating is %d\nLet's start game!\n", name, rate); err != nil {
+	if err := ReadyToStart(in, name, rate); err != nil {
 		return err
 	}
 
@@ -50,7 +55,7 @@ func Run(name string, rate int) error {
 			goto L
 		}
 
-		result, err := Poker(rate, userInput.Stdin)
+		result, err := Poker(rate, in)
 		if err != nil {
 			return fmt.Errorf("poker error: %w", err)
 		}
@@ -59,7 +64,7 @@ func Run(name string, rate int) error {
 			return err
 		}
 
-		flag, err := IsContinued(userInput.Stdin)
+		flag, err := IsContinued(in)
 		if err != nil {
 			return fmt.Errorf("continue error: %w", err)
 		}
@@ -70,6 +75,85 @@ func Run(name string, rate int) error {
 		card.ResetCards()
 	}
 L:
+
+	if err := AddHighScore(db, flag, chip, currentHighScore, name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ReadyToStart(in io.Reader, name string, rate int) error {
+	if _, err := fmt.Printf("Welcome to go-poker, %s.\nrating is %d\n", name, rate); err != nil {
+		return err
+	}
+
+	scanner := bufio.NewScanner(in)
+	if _, err := fmt.Println("if you are ready, input 'y'"); err != nil {
+		return err
+	}
+	for {
+		scanner.Scan()
+		input := scanner.Text()
+		switch input {
+		case "y":
+			if _, err := fmt.Println("Let's start game!"); err != nil {
+				return err
+			}
+			return nil
+		default:
+			if _, err := fmt.Println("this command is not allowed, please type again."); err != nil {
+				return err
+			}
+			continue
+		}
+	}
+}
+
+func ShowHighScore(db *sql.DB) (bool, int, error) {
+	var score int
+	if database.IsRegister(db) {
+		highScore, err := database.GetHighScore(db)
+		if err != nil {
+			return false, 0, err
+		}
+		score = highScore.Score
+		highScoreMessage := fmt.Sprintf("HIGH SCORE | Name: %s, Score: %d", highScore.Name, score)
+		if _, err := fmt.Println(highScoreMessage); err != nil {
+			return false, 0, err
+		}
+		return true, highScore.Score, nil
+	}
+
+	noHighScoreMessage := fmt.Sprint("HIGH SCORE | Name: , Score: ")
+	if _, err := fmt.Println(noHighScoreMessage); err != nil {
+		return false, 0, err
+	}
+	return false, score, nil
+}
+
+func AddHighScore(db *sql.DB, flag bool, chip, currentHighScore int, name string) error {
+	record := database.HighScore{
+		Name:  name,
+		Score: chip,
+	}
+	if flag {
+		if chip > currentHighScore {
+			if err := database.UpdateHighScore(db, record); err != nil {
+				return err
+			}
+			if _, err := fmt.Printf("Update HIGH SCORE: Name %s, Score: %d\n", record.Name, record.Score); err != nil {
+				return err
+			}
+		}
+	} else {
+		if err := database.CreateHighScore(db, record); err != nil {
+			return err
+		}
+		if _, err := fmt.Printf("Add HIGH SCORE: Name %s, Score %d\n", record.Name, record.Score); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }

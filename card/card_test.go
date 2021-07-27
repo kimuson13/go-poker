@@ -68,18 +68,6 @@ func TestPickFirstCards(t *testing.T) {
 				t.Errorf("PickFirst card want len(%d) map, but got len(%d) map", c.want, len(c.mp))
 			}
 		})
-		// hands := card.PickFirstCards()
-		// for _, hand := range hands {
-		// 	if _, ok := c.mp[hand]; ok {
-		// 		c.mp[hand]++
-		// 	} else {
-		// 		c.mp[hand] = 1
-		// 	}
-		// }
-
-		// if len(c.mp) != c.want {
-		// 	t.Errorf("Error in %s: this card is not unique. want length = %d, but bot %d", name, c.want, len(c.mp))
-		// }
 	}
 }
 
