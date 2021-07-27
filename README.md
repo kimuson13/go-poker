@@ -2,13 +2,14 @@
 [![Build Status](https://travis-ci.com/kimuson13/go-poker.svg?branch=main)](https://travis-ci.com/kimuson13/go-poker)  
 ## 概要
 Go製のマシンポーカーです。  
+Goの環境があることが動く条件になります。  
 基本的なルールは[ここ](https://www.xn--lck0a5auxk.jp/videopoker.html)を参照しています。  
 暇つぶしにどうぞ！
 
 ## 使い方
 ```
 $ git clone https://github.com/kimuson13/go-poker.git
-$ cd cmd/poker
+$ cd go-poker
 $ go build poker.go 
 $ ./poker [オプション]
 ```
