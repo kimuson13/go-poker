@@ -2,10 +2,175 @@ package system_test
 
 import (
 	"bytes"
+	"database/sql"
+	"fmt"
+	"os"
 	"testing"
 
+	highscoreDB "github.com/kimuson13/go-poker/db"
 	"github.com/kimuson13/go-poker/system"
 )
+
+func setUpTestDB(t *testing.T, name string) (*sql.DB, func()) {
+	t.Helper()
+	testDB, err := highscoreDB.GetDB(name)
+	dbName := fmt.Sprintf("%s.db", name)
+	if err != nil {
+		t.Fatal("Error: ", err)
+	}
+
+	return testDB, func() {
+		if err := testDB.Close(); err != nil {
+			t.Fatal("Error: ", err)
+		}
+		if err := os.Remove(dbName); err != nil {
+			t.Fatal("Error ", err)
+		}
+	}
+}
+
+func TestShowHighScorewithNoRecord(t *testing.T) {
+	testDB, cleanFunc := setUpTestDB(t, "testsys1")
+	defer cleanFunc()
+
+	want := struct {
+		score int
+		is    bool
+	}{
+		score: 0,
+		is:    false,
+	}
+
+	gotIs, gotScore, err := system.ShowHighScore(testDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	switch {
+	case gotIs != want.is:
+		t.Errorf("want bool is %v, but got %v", want.is, gotIs)
+	case gotScore != want.score:
+		t.Errorf("want score is %d, but got %d", want.score, gotScore)
+	}
+}
+
+func TestShowHighScoreWithAlreadyRecordRxists(t *testing.T) {
+	testDB, cleanFunc := setUpTestDB(t, "testsys2")
+	defer cleanFunc()
+
+	model := highscoreDB.HighScore{
+		Name:  "test",
+		Score: 100,
+	}
+	if err := highscoreDB.CreateHighScore(testDB, model); err != nil {
+		t.Fatal(err)
+	}
+
+	want := struct {
+		score int
+		is    bool
+	}{
+		score: 100,
+		is:    true,
+	}
+
+	gotIs, gotScore, err := system.ShowHighScore(testDB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	switch {
+	case gotIs != want.is:
+		t.Errorf("want bool is %v, but got %v", want.is, gotIs)
+	case gotScore != want.score:
+		t.Errorf("want score is %d, but got %d", want.score, gotScore)
+	}
+}
+
+func TestAddHighScoreWithNoRecord(t *testing.T) {
+	testDB, cleanFunc := setUpTestDB(t, "testsys3")
+	defer cleanFunc()
+
+	input := struct {
+		chip             int
+		currentHighScore int
+		name             string
+		flag             bool
+	}{
+		chip:             100,
+		currentHighScore: 10,
+		name:             "test2",
+		flag:             false,
+	}
+
+	err := system.AddHighScore(testDB, input.flag, input.chip, input.currentHighScore, input.name)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestAddHighScoreWithAlreadyRecordExists(t *testing.T) {
+	testDB, cleanFunc := setUpTestDB(t, "testsys4")
+	defer cleanFunc()
+	model := highscoreDB.HighScore{
+		Name:  "test",
+		Score: 100,
+	}
+	if err := highscoreDB.CreateHighScore(testDB, model); err != nil {
+		t.Fatal(err)
+	}
+
+	cases := map[string]struct {
+		chip             int
+		currentHighScore int
+		name             string
+		flag             bool
+	}{
+		"it_is_under_score": {
+			chip:             50,
+			currentHighScore: model.Score,
+			name:             "test",
+			flag:             true,
+		},
+		"it_is_over_score": {
+			chip:             200,
+			currentHighScore: model.Score,
+			name:             "test",
+			flag:             true,
+		},
+	}
+
+	for name, c := range cases {
+		c := c
+		t.Run(name, func(t *testing.T) {
+			err := system.AddHighScore(testDB, c.flag, c.chip, c.currentHighScore, c.name)
+			if err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
+func TestReadytoStart(t *testing.T) {
+	cases := map[string]string{
+		"answer_yes":               "y",
+		"answer_default_after_yes": "aaa\ny",
+	}
+
+	for name, c := range cases {
+		c := c
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			testInput := bytes.NewBufferString(c)
+			in := &system.UserInput{
+				Stdin: testInput,
+			}
+			err := system.ReadyToStart(in.Stdin, "test", 0)
+			if err != nil {
+				t.Error(err)
+			}
+		})
+	}
+}
 
 func TestPoker(t *testing.T) {
 	input := "No"
@@ -23,22 +188,6 @@ func TestPoker(t *testing.T) {
 	}
 }
 
-func TestIsContinuedWithDefault(t *testing.T) {
-	input1 := "aaa"
-	input2 := "n"
-	testInput := bytes.NewBufferString(input1 + "\n" + input2 + "\n")
-	in := &system.UserInput{
-		Stdin: testInput,
-	}
-	got, err := system.IsContinued(in.Stdin)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if got {
-		t.Error("want false, but got true")
-	}
-}
-
 func TestIsContinued(t *testing.T) {
 	cases := map[string]struct {
 		input string
@@ -52,11 +201,20 @@ func TestIsContinued(t *testing.T) {
 			input: "n",
 			want:  false,
 		},
+		"answer_others_last_true": {
+			input: "aaa\ny",
+			want:  true,
+		},
+		"answer_others_last_false": {
+			input: "iii\nn",
+			want:  false,
+		},
 	}
 
 	for name, c := range cases {
 		c := c
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			testInput := bytes.NewBufferString(c.input + "\n")
 			in := &system.UserInput{
 				Stdin: testInput,
@@ -233,6 +391,7 @@ func TestChangeCards(t *testing.T) {
 	for name, c := range cases {
 		c := c
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			testInput := bytes.NewBufferString(c.input + "\n")
 			in := &system.UserInput{
 				Stdin: testInput,
