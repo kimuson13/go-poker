@@ -49,7 +49,7 @@ func Run(name string, db *sql.DB, in io.Reader, rate int) error {
 	for {
 		chip -= rate
 		if chip <= 0 {
-			if _, err := fmt.Println("you don't have enough chip!"); err != nil {
+			if _, err := fmt.Println("You don't have enough chip!"); err != nil {
 				return err
 			}
 			goto L
@@ -89,7 +89,7 @@ func ReadyToStart(in io.Reader, name string, rate int) error {
 	}
 
 	scanner := bufio.NewScanner(in)
-	if _, err := fmt.Println("if you are ready, input 'y'"); err != nil {
+	if _, err := fmt.Println("If you are ready, type 'y'"); err != nil {
 		return err
 	}
 	for {
@@ -102,7 +102,7 @@ func ReadyToStart(in io.Reader, name string, rate int) error {
 			}
 			return nil
 		default:
-			if _, err := fmt.Println("this command is not allowed, please type again."); err != nil {
+			if _, err := fmt.Println("This command is not allowed, please type again."); err != nil {
 				return err
 			}
 			continue
@@ -160,7 +160,7 @@ func AddHighScore(db *sql.DB, flag bool, chip, currentHighScore int, name string
 
 func Poker(rate int, in io.Reader) (int, error) {
 	hands := card.PickFirstCards()
-	if _, err := fmt.Println("Your Card:"); err != nil {
+	if _, err := fmt.Println("Your Cards:"); err != nil {
 		return 0, err
 	}
 	for n, hand := range hands {
@@ -169,7 +169,7 @@ func Poker(rate int, in io.Reader) (int, error) {
 			return 0, err
 		}
 	}
-	if _, err := fmt.Println("Please input numbers you want to change in ascending orger.\nif you don't change cards, please input 'No'\nIf you want to change all, please input 'all'\nFor example: '1 2 3'"); err != nil {
+	if _, err := fmt.Println("Please type numbers you want to change in ascending order.\nIf you don't change cards, please type 'No'\nIf you want to change all, please type 'all'\nFor example: '1 2 3'"); err != nil {
 		return 0, err
 	}
 	input, err := ChangeCards(in)
@@ -206,17 +206,17 @@ func IsContinued(in io.Reader) (bool, error) {
 		input := scanner.Text()
 		switch input {
 		case "y":
-			if _, err := fmt.Println("ok, let's play next game!"); err != nil {
+			if _, err := fmt.Println("OK, let's play next game!"); err != nil {
 				return false, err
 			}
 			return true, nil
 		case "n":
-			if _, err := fmt.Println("ok, we'll be looking forward to meeting you again someday."); err != nil {
+			if _, err := fmt.Println("OK, we'll be looking forward to meeting you again someday."); err != nil {
 				return false, err
 			}
 			return false, nil
 		default:
-			if _, err := fmt.Println("this command is not allowed, please type again."); err != nil {
+			if _, err := fmt.Println("This command is not allowed, please type again."); err != nil {
 				return false, err
 			}
 			continue
